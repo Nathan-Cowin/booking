@@ -14,11 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware
-            ->web(append: [
-                NeedsTenant::class,
-                EnsureValidTenantSession::class,
-            ]);
+//        $middleware
+//            ->web(append: [
+//                NeedsTenant::class,
+//                EnsureValidTenantSession::class,
+//            ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
