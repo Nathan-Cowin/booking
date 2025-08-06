@@ -10,8 +10,6 @@ class BarberController extends Controller
 {
     public function index()
     {
-        $barbers = Barber::all();
-
-        return view('welcome', compact('barbers'));
+        return Barber::with('user')->get();
     }
 }

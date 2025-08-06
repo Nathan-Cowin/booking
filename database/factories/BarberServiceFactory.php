@@ -3,13 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Barber;
-use App\Models\User;
+use App\Models\BarberService;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Barber>
+ * @extends Factory<BarberService>
  */
-class BarberFactory extends Factory
+class BarberServiceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,7 +20,8 @@ class BarberFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'barber_id' => Barber::factory(),
+            'service_id' => Service::factory(),
         ];
     }
 }
