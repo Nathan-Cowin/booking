@@ -23,7 +23,7 @@ it('can get all services for a barber', function () {
                 'name',
                 'created_at',
                 'updated_at',
-            ]
+            ],
         ]);
 });
 

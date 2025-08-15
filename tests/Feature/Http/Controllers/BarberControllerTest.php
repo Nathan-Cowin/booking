@@ -3,9 +3,21 @@
 use App\Models\Barber;
 
 it('gets all barbers', function () {
-    Barber::factory()->count(5)->create();
+    Barber::factory()->count(3)->create();
 
-    $response = $this->get('/api/barbers');
-
-    $response->assertStatus(200)->assertJsonCount(5);
+    $this->get('/api/barbers')
+        ->assertStatus(200)
+        ->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'user' => [
+                        'id',
+                        'name',
+                        'email',
+                    ],
+                ],
+            ],
+        ])
+        ->assertJsonCount(3, 'data');
 });

@@ -2,29 +2,30 @@
 
 namespace App\Models;
 
+use Database\Factories\WorkingHoursFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Unavailability extends Model
+class WorkingHours extends Model
 {
-    /** @use HasFactory<\Database\Factories\UnavailabilityFactory> */
+    /** @use HasFactory<WorkingHoursFactory> */
     use HasFactory;
 
     protected $fillable = [
         'barber_id',
-        'reason',
+        'day_of_week',
         'start_time',
         'end_time',
+        'slot_duration_minutes',
+        'is_available',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'start_time' => 'datetime',
-            'end_time' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'start_time' => 'datetime:H:i',
+        'end_time' => 'datetime:H:i',
+        'is_available' => 'boolean',
+    ];
 
     public function barber(): BelongsTo
     {

@@ -15,7 +15,9 @@ return new class extends Migration
         Schema::create('unavailabilities', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Barber::class);
-            $table->string('type');
+            $table->string('reason');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->timestamps();
         });
     }

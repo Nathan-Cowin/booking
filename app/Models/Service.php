@@ -15,7 +15,9 @@ class Service extends Model
 
     protected $fillable = [
         'name',
-        'type'
+        'type',
+        'duration_minutes',
+        'price',
     ];
 
     public function casts()

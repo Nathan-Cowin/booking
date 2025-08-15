@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
@@ -14,13 +15,13 @@ class Tenant extends BaseTenant implements IsTenant
 
     protected static function booted(): void
     {
-        static::creating(fn(Tenant $model) => $model->createDatabase());
+        static::creating(fn (Tenant $model) => $model->createDatabase());
     }
 
     public function createDatabase(): void
     {
-        if(is_null($this->database)) {
-            $this->database = 'tenant_' . $this->name;
+        if (is_null($this->database)) {
+            $this->database = 'tenant_'.$this->name;
         }
 
         DB::connection('tenant')->statement(
