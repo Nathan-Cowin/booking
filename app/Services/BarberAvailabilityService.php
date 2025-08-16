@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 class BarberAvailabilityService
 {
-    private const SLOT_INCREMENT_MINUTES = 15;
+    private const int INCREMENT_MINUTES = 15;
 
     public function __construct(
         private readonly BarberRepositoryInterface $barberRepository
@@ -24,7 +24,7 @@ class BarberAvailabilityService
             return [];
         }
 
-        $totalDuration = $this->barberRepository->calculateTotalServiceDuration($barber, $serviceIds);
+        $totalDuration = $this->barberRepository->serviceDuration($barber, $serviceIds);
         $unavailabilities = $this->barberRepository->unavailabilities($barber, $date);
         $existingBookings = $this->barberRepository->existingBookings($barber, $date);
 
@@ -37,9 +37,9 @@ class BarberAvailabilityService
         );
     }
 
-    public function calculateTotalServiceDuration(Barber $barber, array $serviceIds): int
+    public function serviceDuration(Barber $barber, array $serviceIds): int
     {
-        return $this->barberRepository->calculateTotalServiceDuration($barber, $serviceIds);
+        return $this->barberRepository->serviceDuration($barber, $serviceIds);
     }
 
     private function generateAvailableSlots(
@@ -66,7 +66,7 @@ class BarberAvailabilityService
                 ];
             }
 
-            $current->addMinutes(self::SLOT_INCREMENT_MINUTES);
+            $current->addMinutes(self::INCREMENT_MINUTES);
         }
 
         return $slots;
@@ -78,10 +78,8 @@ class BarberAvailabilityService
             return $startTime;
         }
 
-        $now = Carbon::now();
-
-        return $now->greaterThan($startTime)
-            ? $now->addMinutes(self::SLOT_INCREMENT_MINUTES)
+        return Carbon::now()->greaterThan($startTime)
+            ? Carbon::now()->addMinutes(self::INCREMENT_MINUTES)
             : $startTime;
     }
 

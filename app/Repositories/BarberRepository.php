@@ -33,7 +33,7 @@ class BarberRepository implements BarberRepositoryInterface
             ->get(['start_time', 'end_time']);
     }
 
-    public function calculateTotalServiceDuration(Barber $barber, array $serviceIds): int
+    public function serviceDuration(Barber $barber, array $serviceIds): int
     {
         return $barber->services()
             ->whereIn('services.id', $serviceIds)

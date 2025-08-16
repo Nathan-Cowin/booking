@@ -17,7 +17,7 @@ class BarberAvailabilityController extends Controller
     public function index(BarberAvailabilityRequest $request, Barber $barber): JsonResponse
     {
         $date = Carbon::parse($request->date)->startOfDay();
-        $totalDuration = $this->availabilityService->calculateTotalServiceDuration($barber, $request->service_ids);
+        $totalDuration = $this->availabilityService->serviceDuration($barber, $request->service_ids);
         $slots = $this->availabilityService->availableSlots($barber, $date, $request->service_ids);
 
         return response()->json([

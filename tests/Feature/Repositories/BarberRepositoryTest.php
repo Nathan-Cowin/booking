@@ -250,13 +250,13 @@ describe('existingBookings', function () {
     });
 });
 
-describe('calculateTotalServiceDuration', function () {
+describe('serviceDuration', function () {
     it('calculates total duration for single service', function () {
         $barber = Barber::factory()->for(User::factory())
             ->has(Service::factory(['duration_minutes' => 30]))
             ->create();
 
-        $result = new BarberRepository()->calculateTotalServiceDuration($barber, [$barber->services->first()->id]);
+        $result = new BarberRepository()->serviceDuration($barber, [$barber->services->first()->id]);
 
         expect($result)->toBe(30);
     });
@@ -269,7 +269,7 @@ describe('calculateTotalServiceDuration', function () {
             ->create();
 
         $serviceIds = $barber->services->pluck('id')->toArray();
-        $result = new BarberRepository()->calculateTotalServiceDuration($barber, $serviceIds);
+        $result = new BarberRepository()->serviceDuration($barber, $serviceIds);
 
         expect($result)->toBe(90);
     });
@@ -280,7 +280,7 @@ describe('calculateTotalServiceDuration', function () {
             ->create();
         $otherService = Service::factory()->create(['duration_minutes' => 60]);
 
-        $result = new BarberRepository()->calculateTotalServiceDuration(
+        $result = new BarberRepository()->serviceDuration(
             $barber,
             [$barber->services->first()->id, $otherService->id]
         );
@@ -294,7 +294,7 @@ describe('calculateTotalServiceDuration', function () {
         $service = Service::factory()->create(['duration_minutes' => 30]);
         // Don't attach service to barber
 
-        $result = new BarberRepository()->calculateTotalServiceDuration($barber, [$service->id]);
+        $result = new BarberRepository()->serviceDuration($barber, [$service->id]);
 
         expect($result)->toBe(0);
     });
@@ -302,7 +302,7 @@ describe('calculateTotalServiceDuration', function () {
     it('returns zero for empty service ids array', function () {
         $barber = Barber::factory()->for(User::factory())->create();
 
-        $result = new BarberRepository()->calculateTotalServiceDuration($barber, []);
+        $result = new BarberRepository()->serviceDuration($barber, []);
 
         expect($result)->toBe(0);
     });
@@ -316,7 +316,7 @@ describe('calculateTotalServiceDuration', function () {
 
         $serviceIds = $barber->services->pluck('id')->toArray();
         $serviceIds[] = $service3->id;
-        $result = new BarberRepository()->calculateTotalServiceDuration($barber, $serviceIds);
+        $result = new BarberRepository()->serviceDuration($barber, $serviceIds);
 
         expect($result)->toBe(75); // 30 + 45, excludes service3
     });

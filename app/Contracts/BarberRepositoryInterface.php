@@ -15,5 +15,5 @@ interface BarberRepositoryInterface
 
     public function existingBookings(Barber $barber, Carbon $date): Collection;
 
-    public function calculateTotalServiceDuration(Barber $barber, array $serviceIds): int;
+    public function serviceDuration(Barber $barber, array $serviceIds): int;
 }
