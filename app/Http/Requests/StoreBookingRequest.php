@@ -24,7 +24,8 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'barber_id' => ['required', 'exists:barbers,id'],
-            'service_id' => ['required', 'exists:services,id'],
+            'service_ids' => ['required', 'array', 'min:1'],
+            'service_ids.*' => ['required', 'exists:services,id'],
             'start_time' => ['required', 'date'],
             'customer_name' => ['required', 'string', 'max:255'],
             'customer_email' => ['required', 'email', 'max:255'],

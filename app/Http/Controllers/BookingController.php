@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\BarberRepositoryInterface;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Barber;
-use App\Models\Bookings;
-use App\Models\Service;
+use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
 class BookingController extends Controller
 {
+    public function __construct(
+        private readonly BarberRepositoryInterface $barberRepository
+    ) {}
+
     public function store(StoreBookingRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
         $barber = Barber::findOrFail($validated['barber_id']);
-        $service = Service::findOrFail($validated['service_id']);
-
         $startTime = Carbon::parse($validated['start_time']);
-        $endTime = $startTime->copy()->addMinutes($service->duration_minutes);
+
+        $totalDuration = $this->barberRepository->serviceDuration($barber, $validated['service_ids']);
+        $endTime = $startTime->copy()->addMinutes($totalDuration);
 
         if (! $this->isSlotAvailable($barber, $startTime, $endTime)) {
             return response()->json([
@@ -31,9 +35,8 @@ class BookingController extends Controller
             ], 422);
         }
 
-        $booking = Bookings::create([
+        $booking = Booking::create([
             'barber_id' => $validated['barber_id'],
-            'service_id' => $validated['service_id'],
             'start_time' => $startTime,
             'end_time' => $endTime,
             'customer_name' => $validated['customer_name'],
@@ -43,7 +46,10 @@ class BookingController extends Controller
             'notes' => $validated['notes'] ?? null,
         ]);
 
-        $booking->load(['barber.user', 'service']);
+        // Attach services to the booking
+        $booking->services()->attach($validated['service_ids']);
+
+        $booking->load(['barber.user', 'services']);
 
         return response()->json([
             'message' => 'Booking created successfully',

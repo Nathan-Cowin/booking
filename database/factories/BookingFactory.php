@@ -3,13 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Barber;
+use App\Models\Booking;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Bookings>
+ * @extends Factory<Booking>
  */
-class BookingsFactory extends Factory
+class BookingFactory extends Factory
 {
     /**
      * Define the model's default state.

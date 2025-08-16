@@ -32,4 +32,10 @@ class Service extends Model
         return $this->belongsToMany(Barber::class)
             ->using(BarberService::class);
     }
+
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Booking::class, )
+            ->using(BookingService::class);
+    }
 }

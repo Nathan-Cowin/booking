@@ -2,7 +2,7 @@
 
 use App\Contracts\BarberRepositoryInterface;
 use App\Models\Barber;
-use App\Models\Bookings;
+use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Unavailability;
 use App\Models\User;
@@ -72,11 +72,12 @@ describe('availableSlots', function () {
             'is_available' => true,
         ]);
 
-        Bookings::factory()->for($barber)->for($barber->services->first(), 'service')->create([
+        $booking = Booking::factory()->for($barber)->create([
             'start_time' => today()->copy()->setTime(10, 15),
             'end_time' => today()->copy()->setTime(10, 45),
             'status' => 'confirmed',
         ]);
+        $booking->services()->attach($barber->services->first()->id);
 
         $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, today(), [$barber->services->first()->id]);
 

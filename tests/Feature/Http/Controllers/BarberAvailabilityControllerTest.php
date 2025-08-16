@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Barber;
-use App\Models\Bookings;
+use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Unavailability;
 use App\Models\User;
@@ -77,7 +77,7 @@ it('calculates correct duration for multiple services', function () {
 it('excludes slots blocked by existing bookings', function () {
     $date = Carbon::today();
 
-    Bookings::factory()->create([
+    Booking::factory()->create([
         'barber_id' => $this->barber->id,
         'service_id' => $this->service->id,
         'start_time' => $date->copy()->setTime(10, 0),
@@ -122,7 +122,7 @@ it('ignores cancelled bookings', function () {
 
     $date = Carbon::today();
 
-    Bookings::factory()->create([
+    Booking::factory()->create([
         'barber_id' => $this->barber->id,
         'service_id' => $this->service->id,
         'start_time' => $date->copy()->setTime(14, 0),

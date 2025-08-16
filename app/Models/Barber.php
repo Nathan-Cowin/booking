@@ -31,7 +31,7 @@ class Barber extends Model
 
     public function bookings(): HasMany
     {
-        return $this->hasMany(Bookings::class);
+        return $this->hasMany(Booking::class);
     }
 
     public function unavailabilities(): HasMany

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Barber;
-use App\Models\Bookings;
+use App\Models\Booking;
 use App\Models\Service;
 use App\Models\Unavailability;
 use App\Models\User;
@@ -153,21 +153,21 @@ describe('existingBookings', function () {
         $barber = Barber::factory()->for(User::factory())->create();
         $date = Carbon::parse('2024-01-15');
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->setTime(10, 0),
             'end_time' => $date->copy()->setTime(11, 0),
             'status' => 'confirmed',
         ]);
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->setTime(14, 0),
             'end_time' => $date->copy()->setTime(15, 0),
             'status' => 'completed',
         ]);
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->setTime(16, 0),
             'end_time' => $date->copy()->setTime(17, 0),
@@ -184,14 +184,14 @@ describe('existingBookings', function () {
         $barber = Barber::factory()->for(User::factory())->create();
         $date = Carbon::parse('2024-01-15');
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->setTime(10, 0),
             'end_time' => $date->copy()->setTime(11, 0),
             'status' => 'confirmed',
         ]);
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->addDay()->setTime(10, 0),
             'end_time' => $date->copy()->addDay()->setTime(11, 0),
@@ -209,14 +209,14 @@ describe('existingBookings', function () {
 
         $otherBarber = Barber::factory()->for(User::factory())->create();
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->setTime(10, 0),
             'end_time' => $date->copy()->setTime(11, 0),
             'status' => 'confirmed',
         ]);
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $otherBarber->id,
             'start_time' => $date->copy()->setTime(14, 0),
             'end_time' => $date->copy()->setTime(15, 0),
@@ -232,7 +232,7 @@ describe('existingBookings', function () {
         $barber = Barber::factory()->for(User::factory())->create();
         $date = Carbon::parse('2024-01-15');
 
-        Bookings::factory()->create([
+        Booking::factory()->create([
             'barber_id' => $barber->id,
             'start_time' => $date->copy()->setTime(10, 0),
             'end_time' => $date->copy()->setTime(11, 0),

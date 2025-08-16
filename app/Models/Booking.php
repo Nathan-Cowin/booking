@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Bookings extends Model
+class Booking extends Model
 {
-    /** @use HasFactory<\Database\Factories\BookingsFactory> */
+    /** @use HasFactory<\Database\Factories\BookingFactory> */
     use HasFactory;
 
     protected $fillable = [
         'barber_id',
-        'service_id',
         'start_time',
         'end_time',
         'customer_name',
@@ -36,8 +36,9 @@ class Bookings extends Model
         return $this->belongsTo(Barber::class);
     }
 
-    public function service(): BelongsTo
+    public function services(): BelongsToMany
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsToMany(Service::class)
+            ->using(BookingService::class);
     }
 }
