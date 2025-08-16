@@ -133,6 +133,50 @@ it('rejects booking for non-existent barber', function () {
         ->assertJsonValidationErrors(['barber_id']);
 });
 
+it('rejects booking for non-existent service', function () {
+    $bookingData = [
+        'barber_id' => $this->barber->id,
+        'service_id' => 999,
+        'start_time' => Carbon::today()->setTime(10, 0)->format('Y-m-d H:i'),
+        'customer_name' => 'Jane Smith',
+        'customer_email' => 'jane@example.com',
+    ];
+
+    $response = $this->postJson('/api/bookings', $bookingData);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['service_id']);
+});
+
+it('rejects booking when barber has no working hours for the day', function () {
+    // Delete the working hours created in beforeEach
+    $this->barber->workingHours()->delete();
+    
+    // Create working hours for tomorrow instead
+    WorkingHours::factory()->create([
+        'barber_id' => $this->barber->id,
+        'day_of_week' => Carbon::tomorrow()->format('l'),
+        'start_time' => '09:00',
+        'end_time' => '18:00',
+        'is_available' => true,
+    ]);
+
+    $bookingData = [
+        'barber_id' => $this->barber->id,
+        'service_id' => $this->service->id,
+        'start_time' => Carbon::today()->setTime(10, 0)->format('Y-m-d H:i'),
+        'customer_name' => 'Jane Smith',
+        'customer_email' => 'jane@example.com',
+    ];
+
+    $response = $this->postJson('/api/bookings', $bookingData);
+
+    $response->assertStatus(422)
+        ->assertJson([
+            'message' => 'The selected time slot is not available',
+        ]);
+});
+
 it('rejects booking outside working hours', function () {
     $bookingData = [
         'barber_id' => $this->barber->id,
@@ -154,10 +198,13 @@ it('rejects booking outside working hours', function () {
 });
 
 it('rejects booking for past time', function () {
+    // Set current time to ensure we're testing past time check
+    Carbon::setTestNow(Carbon::today()->setTime(12, 0));
+    
     $bookingData = [
         'barber_id' => $this->barber->id,
         'service_id' => $this->service->id,
-        'start_time' => Carbon::yesterday()->setTime(10, 0)->format('Y-m-d H:i'),
+        'start_time' => Carbon::today()->setTime(11, 0)->format('Y-m-d H:i'), // 1 hour ago
         'customer_name' => 'Jane Smith',
         'customer_email' => 'jane@example.com',
     ];
@@ -168,6 +215,8 @@ it('rejects booking for past time', function () {
         ->assertJson([
             'message' => 'The selected time slot is not available',
         ]);
+        
+    Carbon::setTestNow();
 });
 
 it('rejects booking that conflicts with existing booking', function () {

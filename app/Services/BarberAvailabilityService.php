@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\BarberRepositoryInterface;
 use App\Models\Barber;
 use App\Models\WorkingHours;
 use Carbon\Carbon;
@@ -11,17 +12,21 @@ class BarberAvailabilityService
 {
     private const SLOT_INCREMENT_MINUTES = 15;
 
+    public function __construct(
+        private readonly BarberRepositoryInterface $barberRepository
+    ) {}
+
     public function availableSlots(Barber $barber, Carbon $date, array $serviceIds): array
     {
-        $workingHours = $this->workingHours($barber, $date);
+        $workingHours = $this->barberRepository->workingHours($barber, $date);
 
         if (! $workingHours) {
             return [];
         }
 
-        $totalDuration = $this->calculateTotalServiceDuration($barber, $serviceIds);
-        $unavailabilities = $this->unavailabilities($barber, $date);
-        $existingBookings = $this->existingBookings($barber, $date);
+        $totalDuration = $this->barberRepository->calculateTotalServiceDuration($barber, $serviceIds);
+        $unavailabilities = $this->barberRepository->unavailabilities($barber, $date);
+        $existingBookings = $this->barberRepository->existingBookings($barber, $date);
 
         return $this->generateAvailableSlots(
             $date,
@@ -32,36 +37,9 @@ class BarberAvailabilityService
         );
     }
 
-    private function calculateTotalServiceDuration(Barber $barber, array $serviceIds): int
+    public function calculateTotalServiceDuration(Barber $barber, array $serviceIds): int
     {
-        return $barber->services()
-            ->whereIn('services.id', $serviceIds)
-            ->sum('duration_minutes');
-    }
-
-    private function workingHours(Barber $barber, Carbon $date): ?WorkingHours
-    {
-        $dayOfWeek = $date->format('l');
-
-        return $barber->workingHours()
-            ->where('day_of_week', $dayOfWeek)
-            ->where('is_available', true)
-            ->first();
-    }
-
-    private function unavailabilities(Barber $barber, Carbon $date): Collection
-    {
-        return $barber->unavailabilities()
-            ->whereDate('start_time', $date)
-            ->get(['start_time', 'end_time']);
-    }
-
-    private function existingBookings(Barber $barber, Carbon $date): Collection
-    {
-        return $barber->bookings()
-            ->whereDate('start_time', $date)
-            ->where('status', '!=', 'cancelled')
-            ->get(['start_time', 'end_time']);
+        return $this->barberRepository->calculateTotalServiceDuration($barber, $serviceIds);
     }
 
     private function generateAvailableSlots(
