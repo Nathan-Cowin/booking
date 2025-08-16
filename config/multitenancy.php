@@ -35,7 +35,7 @@ return [
      */
     'switch_tenant_tasks' => [
         // \Spatie\Multitenancy\Tasks\PrefixCacheTask::class,
-        // \Spatie\Multitenancy\Tasks\SwitchTenantDatabaseTask::class,
+        \Spatie\Multitenancy\Tasks\SwitchTenantDatabaseTask::class,
         // \Spatie\Multitenancy\Tasks\SwitchRouteCacheTask::class,
     ],
 
@@ -64,7 +64,7 @@ return [
     /*
      * The connection name to reach the landlord database.
      */
-    'landlord_database_connection_name' => null,
+    'landlord_database_connection_name' => 'landlord',
 
     /*
      * This key will be used to associate the current tenant in the context

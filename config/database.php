@@ -30,6 +30,21 @@ return [
     */
 
     'connections' => [
+        'tenant' => [
+            'driver' => 'mysql',
+            'database' => null,
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+        ],
+
+        'landlord' => [
+            'driver' => 'mysql',
+            'database' => 'landlord',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+        ],
 
         'sqlite' => [
             'driver' => 'sqlite',
