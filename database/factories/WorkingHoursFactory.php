@@ -22,7 +22,6 @@ class WorkingHoursFactory extends Factory
             ]),
             'start_time' => '09:00',
             'end_time' => '18:00',
-            'slot_duration_minutes' => 30,
             'is_available' => true,
         ];
     }

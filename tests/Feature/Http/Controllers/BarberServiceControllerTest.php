@@ -21,6 +21,10 @@ it('can get all services for a barber', function () {
             '*' => [
                 'id',
                 'name',
+                'type',
+                'description',
+                'duration_minutes',
+                'price',
                 'created_at',
                 'updated_at',
             ],

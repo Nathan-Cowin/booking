@@ -23,7 +23,6 @@ beforeEach(function () {
         'day_of_week' => Carbon::today()->format('l'),
         'start_time' => '09:00',
         'end_time' => '18:00',
-        'slot_duration_minutes' => 30,
         'is_available' => true,
     ]);
 });

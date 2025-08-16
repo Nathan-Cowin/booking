@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookingRequest;
+use App\Http\Resources\BookingResource;
 use App\Models\Barber;
 use App\Models\Bookings;
 use App\Models\Service;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store(StoreBookingRequest $request): JsonResponse
     {
-        $validated = $request;
+        $validated = $request->validated();
 
         $barber = Barber::findOrFail($validated['barber_id']);
         $service = Service::findOrFail($validated['service_id']);
@@ -46,18 +47,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'Booking created successfully',
-            'booking' => [
-                'id' => $booking->id,
-                'barber_name' => $booking->barber->user->name,
-                'service_name' => $booking->service->name,
-                'start_time' => $booking->start_time->format('Y-m-d H:i'),
-                'end_time' => $booking->end_time->format('Y-m-d H:i'),
-                'customer_name' => $booking->customer_name,
-                'customer_email' => $booking->customer_email,
-                'customer_phone' => $booking->customer_phone,
-                'status' => $booking->status,
-                'notes' => $booking->notes,
-            ],
+            'booking' => new BookingResource($booking),
         ], 201);
     }
 

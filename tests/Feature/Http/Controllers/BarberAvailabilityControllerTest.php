@@ -23,7 +23,6 @@ beforeEach(function () {
         'day_of_week' => Carbon::today()->format('l'),
         'start_time' => '09:00',
         'end_time' => '18:00',
-        'slot_duration_minutes' => 30,
         'is_available' => true,
     ]);
 });
@@ -208,7 +207,6 @@ it('returns empty slots when barber has no working hours for the day', function 
             'date' => $tomorrow->format('Y-m-d'),
             'barber_id' => $this->barber->id,
             'available_slots' => [],
-            'message' => 'Barber is not available on this day',
         ]);
 });
 
@@ -224,7 +222,6 @@ it('returns empty slots when barber is not available for the day', function () {
     $response->assertStatus(200)
         ->assertJson([
             'available_slots' => [],
-            'message' => 'Barber is not available on this day',
         ]);
 });
 

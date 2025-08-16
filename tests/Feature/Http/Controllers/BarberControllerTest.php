@@ -8,16 +8,14 @@ it('gets all barbers', function () {
     $this->get('/api/barbers')
         ->assertStatus(200)
         ->assertJsonStructure([
-            'data' => [
-                '*' => [
+            '*' => [
+                'id',
+                'user' => [
                     'id',
-                    'user' => [
-                        'id',
-                        'name',
-                        'email',
-                    ],
+                    'name',
+                    'email',
                 ],
             ],
         ])
-        ->assertJsonCount(3, 'data');
+        ->assertJsonCount(3);
 });

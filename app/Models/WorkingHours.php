@@ -17,7 +17,6 @@ class WorkingHours extends Model
         'day_of_week',
         'start_time',
         'end_time',
-        'slot_duration_minutes',
         'is_available',
     ];
 
