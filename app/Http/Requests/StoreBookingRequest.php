@@ -13,6 +13,7 @@ class StoreBookingRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+//        return auth()->check();
     }
 
     /**
@@ -27,9 +28,6 @@ class StoreBookingRequest extends FormRequest
             'service_ids' => ['required', 'array', 'min:1'],
             'service_ids.*' => ['required', 'exists:services,id'],
             'start_time' => ['required', 'date'],
-            'customer_name' => ['required', 'string', 'max:255'],
-            'customer_email' => ['required', 'email', 'max:255'],
-            'customer_phone' => ['nullable', 'string', 'max:20'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }

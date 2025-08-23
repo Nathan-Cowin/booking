@@ -54,7 +54,7 @@ describe('availableSlots', function () {
 
         $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, $date, [$barber->services->first()->id]);
 
-        $nineThirtySlot = array_filter($slots, fn($slot) => $slot['start_time'] === '09:30');
+        $nineThirtySlot = array_filter($slots, fn ($slot) => $slot['start_time'] === '09:30');
         expect($nineThirtySlot)->toBeEmpty();
     })->freezeTime();
 
@@ -81,7 +81,7 @@ describe('availableSlots', function () {
 
         $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, today(), [$barber->services->first()->id]);
 
-        $tenOClockSlot = array_filter($slots, fn($slot) => $slot['start_time'] === '10:00');
+        $tenOClockSlot = array_filter($slots, fn ($slot) => $slot['start_time'] === '10:00');
         expect($tenOClockSlot)->toBeEmpty();
     });
 })->freezeTime();

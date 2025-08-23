@@ -18,7 +18,19 @@ class BookingController extends Controller
 
     public function store(StoreBookingRequest $request): JsonResponse
     {
+        logger('start');
         $validated = $request->validated();
+        $user = $request->user();
+        $client = $user->client;
+
+        logger('ds');
+        if (! $client) {
+            return response()->json([
+                'message' => 'Client profile not found',
+            ], 422);
+        }
+
+        logger('ds');
 
         $barber = Barber::findOrFail($validated['barber_id']);
         $startTime = Carbon::parse($validated['start_time']);
@@ -34,23 +46,24 @@ class BookingController extends Controller
                 ],
             ], 422);
         }
+        logger('ere');
 
         $booking = Booking::create([
             'barber_id' => $validated['barber_id'],
+            'client_id' => $client->id,
             'start_time' => $startTime,
             'end_time' => $endTime,
-            'customer_name' => $validated['customer_name'],
-            'customer_email' => $validated['customer_email'],
-            'customer_phone' => $validated['customer_phone'] ?? null,
             'status' => 'confirmed',
             'notes' => $validated['notes'] ?? null,
         ]);
 
-        // Attach services to the booking
+        logger('here');
+
         $booking->services()->attach($validated['service_ids']);
 
-        $booking->load(['barber.user', 'services']);
+        $booking->load(['barber.user', 'services', 'client']);
 
+        logger('final');
         return response()->json([
             'message' => 'Booking created successfully',
             'booking' => new BookingResource($booking),

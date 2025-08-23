@@ -14,11 +14,9 @@ class Booking extends Model
 
     protected $fillable = [
         'barber_id',
+        'client_id',
         'start_time',
         'end_time',
-        'customer_name',
-        'customer_email',
-        'customer_phone',
         'status',
         'notes',
     ];
@@ -34,6 +32,11 @@ class Booking extends Model
     public function barber(): BelongsTo
     {
         return $this->belongsTo(Barber::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
     public function services(): BelongsToMany

@@ -35,7 +35,7 @@ class Service extends Model
 
     public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Booking::class, )
+        return $this->belongsToMany(Booking::class)
             ->using(BookingService::class);
     }
 }

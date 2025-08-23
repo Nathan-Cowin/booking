@@ -82,7 +82,6 @@ it('excludes slots blocked by existing bookings', function () {
         'service_id' => $this->service->id,
         'start_time' => $date->copy()->setTime(10, 0),
         'end_time' => $date->copy()->setTime(10, 30),
-        'customer_name' => 'Jane Smith',
         'status' => 'confirmed',
     ]);
 
@@ -127,7 +126,6 @@ it('ignores cancelled bookings', function () {
         'service_id' => $this->service->id,
         'start_time' => $date->copy()->setTime(14, 0),
         'end_time' => $date->copy()->setTime(14, 30),
-        'customer_name' => 'Cancelled Customer',
         'status' => 'cancelled',
     ]);
 

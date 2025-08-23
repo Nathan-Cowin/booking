@@ -237,16 +237,12 @@ describe('existingBookings', function () {
             'start_time' => $date->copy()->setTime(10, 0),
             'end_time' => $date->copy()->setTime(11, 0),
             'status' => 'confirmed',
-            'customer_name' => 'John Doe',
-            'customer_email' => 'john@example.com',
         ]);
 
         $result = new BarberRepository()->existingBookings($barber, $date);
 
         $booking = $result->first();
-        expect($booking)->toHaveKeys(['start_time', 'end_time'])
-            ->and($booking)->not->toHaveKey('customer_name')
-            ->and($booking)->not->toHaveKey('customer_email');
+        expect($booking)->toHaveKeys(['start_time', 'end_time']);
     });
 });
 
