@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\BarberRepositoryInterface;
+use App\Enums\BookingStatus;
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Barber;
@@ -66,7 +67,7 @@ class BookingController extends Controller
             'client_id' => $client->id,
             'start_time' => $startTime,
             'end_time' => $endTime,
-            'status' => 'confirmed',
+            'status' => BookingStatus::Confirmed,
             'notes' => $validated['notes'] ?? null,
         ]);
 
@@ -110,7 +111,7 @@ class BookingController extends Controller
 
         $conflictingBookings = $barber->bookings()
             ->whereDate('start_time', $date)
-            ->where('status', '!=', 'cancelled')
+            ->whereNotIn('status', [BookingStatus::Cancelled, BookingStatus::NoShow])
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->where(function ($q) use ($startTime, $endTime) {
                     $q->where('start_time', '<', $endTime)

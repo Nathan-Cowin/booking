@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BookingStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +27,7 @@ class Booking extends Model
         return [
             'start_time' => 'datetime',
             'end_time' => 'datetime',
+            'status' => BookingStatus::class,
         ];
     }
 
@@ -43,5 +45,22 @@ class Booking extends Model
     {
         return $this->belongsToMany(Service::class)
             ->using(BookingService::class);
+    }
+
+    public function isUpcoming(): bool
+    {
+        return in_array($this->status, [BookingStatus::Pending, BookingStatus::Confirmed, BookingStatus::InProgress])
+            && $this->start_time->isFuture();
+    }
+
+    public function isPast(): bool
+    {
+        return $this->status === BookingStatus::Completed
+            || ($this->start_time->isPast() && !in_array($this->status, [BookingStatus::Cancelled, BookingStatus::NoShow]));
+    }
+
+    public function isCancelled(): bool
+    {
+        return in_array($this->status, [BookingStatus::Cancelled, BookingStatus::NoShow]);
     }
 }
