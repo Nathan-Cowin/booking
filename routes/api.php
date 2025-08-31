@@ -5,6 +5,9 @@ use App\Http\Controllers\BarberController;
 use App\Http\Controllers\BarberServiceController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ClientAuthController;
+use App\Http\Controllers\MultiBarberAvailabilityController;
+use App\Http\Controllers\ServiceCompatibilityController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,7 +16,10 @@ Route::post('/client/login', [ClientAuthController::class, 'login'])->name('logi
 
 Route::apiResource('/barbers', BarberController::class)->only('index');
 Route::apiResource('/barbers.services', BarberServiceController::class)->only('index');
+Route::apiResource('/services', ServiceController::class)->only('index');
 Route::get('/barbers/{barber}/availability', [BarberAvailabilityController::class, 'index']);
+Route::get('/availability', [MultiBarberAvailabilityController::class, 'index']);
+Route::post('/services/compatibility', [ServiceCompatibilityController::class, 'check']);
 
 //move below to middleware
 //Route::post('/bookings', [BookingController::class, 'store']);

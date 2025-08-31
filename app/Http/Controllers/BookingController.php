@@ -18,19 +18,15 @@ class BookingController extends Controller
 
     public function store(StoreBookingRequest $request): JsonResponse
     {
-        logger('start');
         $validated = $request->validated();
         $user = $request->user();
         $client = $user->client;
 
-        logger('ds');
         if (! $client) {
             return response()->json([
                 'message' => 'Client profile not found',
             ], 422);
         }
-
-        logger('ds');
 
         $barber = Barber::findOrFail($validated['barber_id']);
         $startTime = Carbon::parse($validated['start_time']);
