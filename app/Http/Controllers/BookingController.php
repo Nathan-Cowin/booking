@@ -84,6 +84,40 @@ class BookingController extends Controller
         ], 201);
     }
 
+    public function cancel(Booking $booking): JsonResponse
+    {
+        $user = auth()->user();
+        $client = $user->client;
+
+        if (! $client) {
+            return response()->json([
+                'message' => 'Client profile not found',
+            ], 422);
+        }
+
+        // Check if booking belongs to the authenticated client
+        if ($booking->client_id !== $client->id) {
+            return response()->json([
+                'message' => 'Unauthorized to cancel this booking',
+            ], 403);
+        }
+
+        // Check if booking can be cancelled (only upcoming bookings)
+        if (! $booking->isUpcoming()) {
+            return response()->json([
+                'message' => 'Only upcoming bookings can be cancelled',
+            ], 422);
+        }
+
+        $booking->update(['status' => BookingStatus::Cancelled]);
+        $booking->load(['barber.user', 'services']);
+
+        return response()->json([
+            'message' => 'Booking cancelled successfully',
+            'booking' => new BookingResource($booking),
+        ]);
+    }
+
     private function isSlotAvailable(Barber $barber, Carbon $startTime, Carbon $endTime): bool
     {
         $date = $startTime->copy()->startOfDay();
