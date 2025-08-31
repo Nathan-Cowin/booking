@@ -30,5 +30,6 @@ Route::middleware(['tenant', 'auth:sanctum'])->group(function () {
 
     Route::post('/client/logout', [ClientAuthController::class, 'logout']);
     Route::get('/client/me', [ClientAuthController::class, 'me']);
+    Route::get('/bookings', [BookingController::class, 'index']);
     Route::post('/bookings', [BookingController::class, 'store']);
 });

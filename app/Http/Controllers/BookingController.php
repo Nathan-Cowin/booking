@@ -9,12 +9,29 @@ use App\Models\Barber;
 use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class BookingController extends Controller
 {
     public function __construct(
         private readonly BarberRepositoryInterface $barberRepository
     ) {}
+
+    public function index(): AnonymousResourceCollection
+    {
+        $client = auth()->user()->client;
+        
+        if (! $client) {
+            return BookingResource::collection([]);
+        }
+
+        $allBookings = $client->bookings()
+            ->with(['barber.user', 'services'])
+            ->orderBy('start_time', 'desc')
+            ->get();
+
+        return BookingResource::collection($allBookings);
+    }
 
     public function store(StoreBookingRequest $request): JsonResponse
     {
