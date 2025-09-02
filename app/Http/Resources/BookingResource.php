@@ -13,13 +13,7 @@ class BookingResource extends JsonResource
             'id' => $this->id,
             'barber_name' => $this->barber->user->name,
             'services' => $this->services->pluck('name'),
-            'service_details' => $this->services->map(function ($service) {
-                return [
-                    'id' => $service->id,
-                    'name' => $service->name,
-                    'price' => $service->price,
-                ];
-            }),
+            'service_details' => ServiceResource::collection($this->services),
             'total_cost' => $this->services->sum('price'),
             'start_time' => $this->start_time->format('Y-m-d H:i'),
             'end_time' => $this->end_time->format('Y-m-d H:i'),
