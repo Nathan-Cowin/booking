@@ -12,6 +12,16 @@ class BarberService extends Pivot
     /** @use HasFactory<BarberServiceFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'price',
+        'duration_minutes',
+    ];
+
+    protected $casts = [
+        'price' => 'integer',
+        'duration_minutes' => 'integer',
+    ];
+
     public function barber(): BelongsTo
     {
         return $this->belongsTo(Barber::class);

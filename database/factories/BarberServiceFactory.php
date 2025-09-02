@@ -22,6 +22,8 @@ class BarberServiceFactory extends Factory
         return [
             'barber_id' => Barber::factory(),
             'service_id' => Service::factory(),
+            'price' => $this->faker->numberBetween(1000, 10000),
+            'duration_minutes' => $this->faker->randomElement([15, 30, 45, 60, 90]),
         ];
     }
 }

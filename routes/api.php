@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientAuthController;
 use App\Http\Controllers\MultiBarberAvailabilityController;
 use App\Http\Controllers\ServiceCompatibilityController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TenantController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,7 @@ Route::middleware(['tenant', 'auth:sanctum'])->group(function () {
 
     Route::post('/client/logout', [ClientAuthController::class, 'logout']);
     Route::get('/client/me', [ClientAuthController::class, 'me']);
+    Route::get('/tenant/current', [TenantController::class, 'current']);
     Route::get('/bookings', [BookingController::class, 'index']);
     Route::post('/bookings', [BookingController::class, 'store']);
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);

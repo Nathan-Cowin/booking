@@ -26,7 +26,8 @@ class Barber extends Model
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class)
-            ->using(BarberService::class);
+            ->using(BarberService::class)
+            ->withPivot(['price', 'duration_minutes']);
     }
 
     public function bookings(): HasMany

@@ -21,7 +21,8 @@ it('can check service compatibility', function () {
     $service3 = Service::factory()->create(['name' => 'Shampoo', 'type' => 'hair']);
     
     // Associate services with barber
-    $barber->services()->attach([$service1->id, $service2->id]);
+    $barber->services()->attach($service1->id, ['price' => 2000, 'duration_minutes' => 30]);
+    $barber->services()->attach($service2->id, ['price' => 1500, 'duration_minutes' => 15]);
     
     // Test compatible services
     $response = $this->postJson('/api/services/compatibility', [
@@ -58,8 +59,8 @@ it('can get multi-barber availability', function () {
     $service1 = Service::factory()->create(['name' => 'Haircut', 'type' => 'hair']);
     
     // Both barbers offer the same service
-    $barber1->services()->attach($service1->id);
-    $barber2->services()->attach($service1->id);
+    $barber1->services()->attach($service1->id, ['price' => 2000, 'duration_minutes' => 30]);
+    $barber2->services()->attach($service1->id, ['price' => 2000, 'duration_minutes' => 30]);
     
     $response = $this->getJson('/api/availability?' . http_build_query([
         'date' => now()->addDay()->format('Y-m-d'),

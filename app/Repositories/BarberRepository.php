@@ -37,6 +37,6 @@ class BarberRepository implements BarberRepositoryInterface
     {
         return $barber->services()
             ->whereIn('services.id', $serviceIds)
-            ->sum('duration_minutes');
+            ->sum('barber_service.duration_minutes');
     }
 }

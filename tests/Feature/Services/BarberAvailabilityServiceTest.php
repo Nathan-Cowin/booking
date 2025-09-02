@@ -13,9 +13,9 @@ use function Pest\Laravel\travelTo;
 
 describe('availableSlots', function () {
     it('returns available slots for future dates without adjusting start time', function () {
-        $barber = Barber::factory()->for(User::factory())
-            ->has(Service::factory(['duration_minutes' => 30]))
-            ->create();
+        $barber = Barber::factory()->for(User::factory())->create();
+        $service = Service::factory(['duration_minutes' => 30])->create();
+        $barber->services()->attach($service->id, ['price' => 2000, 'duration_minutes' => 30]);
         $futureDate = now()->tomorrow();
 
         WorkingHours::factory()->for($barber)->create([
@@ -25,7 +25,7 @@ describe('availableSlots', function () {
             'is_available' => true,
         ]);
 
-        $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, $futureDate, [$barber->services->first()->id]);
+        $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, $futureDate, [$service->id]);
 
         expect($slots)->not->toBeEmpty()
             ->and($slots[0]['start_time'])->toBe('09:00');
@@ -34,9 +34,9 @@ describe('availableSlots', function () {
     it('handles unavailability overlap correctly', function () {
         travelTo(now()->hour(8));
 
-        $barber = Barber::factory()->for(User::factory())
-            ->has(Service::factory(['duration_minutes' => 30]))
-            ->create();
+        $barber = Barber::factory()->for(User::factory())->create();
+        $service = Service::factory(['duration_minutes' => 30])->create();
+        $barber->services()->attach($service->id, ['price' => 2000, 'duration_minutes' => 30]);
 
         $date = today();
 
@@ -52,7 +52,7 @@ describe('availableSlots', function () {
             'end_time' => $date->copy()->setTime(10, 15),
         ]);
 
-        $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, $date, [$barber->services->first()->id]);
+        $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, $date, [$service->id]);
 
         $nineThirtySlot = array_filter($slots, fn ($slot) => $slot['start_time'] === '09:30');
         expect($nineThirtySlot)->toBeEmpty();
@@ -61,9 +61,9 @@ describe('availableSlots', function () {
     it('handles booking overlap correctly', function () {
         travelTo(now()->hour(8));
 
-        $barber = Barber::factory()->for(User::factory())
-            ->has(Service::factory(['duration_minutes' => 30]))
-            ->create();
+        $barber = Barber::factory()->for(User::factory())->create();
+        $service = Service::factory(['duration_minutes' => 30])->create();
+        $barber->services()->attach($service->id, ['price' => 2000, 'duration_minutes' => 30]);
 
         WorkingHours::factory()->for($barber)->create([
             'day_of_week' => today()->format('l'),
@@ -77,9 +77,9 @@ describe('availableSlots', function () {
             'end_time' => today()->copy()->setTime(10, 45),
             'status' => 'confirmed',
         ]);
-        $booking->services()->attach($barber->services->first()->id);
+        $booking->services()->attach($service->id);
 
-        $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, today(), [$barber->services->first()->id]);
+        $slots = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->availableSlots($barber, today(), [$service->id]);
 
         $tenOClockSlot = array_filter($slots, fn ($slot) => $slot['start_time'] === '10:00');
         expect($tenOClockSlot)->toBeEmpty();
@@ -88,11 +88,11 @@ describe('availableSlots', function () {
 
 describe('serviceDuration', function () {
     it('calculateTotalServiceDuration delegates to repository', function () {
-        $barber = Barber::factory()->for(User::factory())
-            ->has(Service::factory(['duration_minutes' => 30]))
-            ->create();
+        $barber = Barber::factory()->for(User::factory())->create();
+        $service = Service::factory(['duration_minutes' => 30])->create();
+        $barber->services()->attach($service->id, ['price' => 2000, 'duration_minutes' => 30]);
 
-        $duration = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->serviceDuration($barber, [$barber->services->first()->id]);
+        $duration = new BarberAvailabilityService(app(BarberRepositoryInterface::class))->serviceDuration($barber, [$service->id]);
 
         expect($duration)->toBe(30);
     });

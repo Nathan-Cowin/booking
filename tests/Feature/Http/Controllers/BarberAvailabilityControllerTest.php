@@ -16,7 +16,7 @@ beforeEach(function () {
         'duration_minutes' => 30,
         'price' => 25.00,
     ]);
-    $this->barber->services()->attach($this->service->id);
+    $this->barber->services()->attach($this->service->id, ['price' => 2500, 'duration_minutes' => 30]);
 
     WorkingHours::factory()->create([
         'barber_id' => $this->barber->id,
@@ -63,7 +63,7 @@ it('calculates correct duration for multiple services', function () {
         'name' => 'Beard Trim',
         'duration_minutes' => 15,
     ]);
-    $this->barber->services()->attach($service2->id);
+    $this->barber->services()->attach($service2->id, ['price' => 1500, 'duration_minutes' => 15]);
 
     $date = Carbon::today()->format('Y-m-d');
     $serviceIds = [$this->service->id, $service2->id];
@@ -77,13 +77,13 @@ it('calculates correct duration for multiple services', function () {
 it('excludes slots blocked by existing bookings', function () {
     $date = Carbon::today();
 
-    Booking::factory()->create([
+    $booking = Booking::factory()->create([
         'barber_id' => $this->barber->id,
-        'service_id' => $this->service->id,
         'start_time' => $date->copy()->setTime(10, 0),
         'end_time' => $date->copy()->setTime(10, 30),
         'status' => 'confirmed',
     ]);
+    $booking->services()->attach($this->service->id);
 
     $response = $this->getJson("/api/barbers/{$this->barber->id}/availability?date={$date->format('Y-m-d')}&service_ids[]={$this->service->id}");
 
@@ -121,13 +121,13 @@ it('ignores cancelled bookings', function () {
 
     $date = Carbon::today();
 
-    Booking::factory()->create([
+    $booking = Booking::factory()->create([
         'barber_id' => $this->barber->id,
-        'service_id' => $this->service->id,
         'start_time' => $date->copy()->setTime(14, 0),
         'end_time' => $date->copy()->setTime(14, 30),
         'status' => 'cancelled',
     ]);
+    $booking->services()->attach($this->service->id);
 
     $response = $this->getJson("/api/barbers/{$this->barber->id}/availability?date={$date->format('Y-m-d')}&service_ids[]={$this->service->id}");
 
@@ -178,7 +178,7 @@ it('handles longer service durations correctly', function () {
         'name' => 'Full Service',
         'duration_minutes' => 120,
     ]);
-    $this->barber->services()->attach($longService->id);
+    $this->barber->services()->attach($longService->id, ['price' => 5000, 'duration_minutes' => 120]);
 
     $date = Carbon::today()->format('Y-m-d');
 

@@ -26,7 +26,6 @@ class BookingFactory extends Factory
         return [
             'barber_id' => Barber::factory(),
             'client_id' => Client::factory(),
-            'service_id' => Service::factory(),
             'start_time' => $startTime,
             'end_time' => $endTime,
             'status' => fake()->randomElement(['confirmed', 'pending', 'completed', 'cancelled']),

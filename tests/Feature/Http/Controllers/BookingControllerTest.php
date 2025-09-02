@@ -12,9 +12,7 @@ use Carbon\Carbon;
 
 beforeEach(function () {
     // Create and set current tenant
-    $this->tenant = Tenant::create([
-        'name' => 'test_salon_'.uniqid(),
-    ]);
+    $this->tenant = Tenant::factory()->create();
     $this->tenant->makeCurrent();
 
     // Create barber user and barber
@@ -32,7 +30,8 @@ beforeEach(function () {
         'duration_minutes' => 15,
         'price' => 15.00,
     ]);
-    $this->barber->services()->attach([$this->service1->id, $this->service2->id]);
+    $this->barber->services()->attach($this->service1->id, ['price' => 2500, 'duration_minutes' => 30]);
+    $this->barber->services()->attach($this->service2->id, ['price' => 1500, 'duration_minutes' => 15]);
 
     // Create client user and client
     $clientUser = User::factory()->create(['email' => 'client@example.com']);

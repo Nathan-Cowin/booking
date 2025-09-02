@@ -20,27 +20,26 @@ class BookingTestSeeder extends Seeder
     {
         // Create users for barbers
         $barberUser1 = User::create([
-            'name' => 'John Doe',
-            'email' => 'john@barbershop.com',
-            'password' => Hash::make('password123'),
+            'name' => 'Matthew',
+            'email' => 'todo@example.com', //todo:
+            'password' => Hash::make('BSideLabel1!'),
             'email_verified_at' => now(),
         ]);
 
         $barberUser2 = User::create([
-            'name' => 'Mike Smith',
-            'email' => 'mike@barbershop.com',
-            'password' => Hash::make('password123'),
+            'name' => 'Santi Barber',
+            'email' => 'santi@example.com',
+            'password' => Hash::make('BSideLabel1!'),
             'email_verified_at' => now(),
         ]);
 
         $barberUser3 = User::create([
-            'name' => 'Tony Rivera',
-            'email' => 'tony@barbershop.com',
-            'password' => Hash::make('password123'),
+            'name' => 'Scott Edwards',
+            'email' => 'scott@example.com',
+            'password' => Hash::make('BSideLabel1!'),
             'email_verified_at' => now(),
         ]);
 
-        // Create barbers
         $barber1 = Barber::create([
             'user_id' => $barberUser1->id,
         ]);
@@ -53,9 +52,8 @@ class BookingTestSeeder extends Seeder
             'user_id' => $barberUser3->id,
         ]);
 
-        // Create services
         $haircut = Service::create([
-            'name' => 'Classic Haircut',
+            'name' => 'Skin Fade',
             'type' => ServiceTypeEnum::HAIR,
             'duration_minutes' => 30,
             'price' => 2500, // $25.00
@@ -89,25 +87,24 @@ class BookingTestSeeder extends Seeder
             'price' => 3000, // $30.00
         ]);
 
-        // Attach services to barbers
         $barber1->services()->attach([
-            $haircut->id,
-            $beardTrim->id,
-            $fadeHaircut->id,
+            $haircut->id => ['price' => 2500, 'duration_minutes' => 30],
+            $beardTrim->id => ['price' => 1500, 'duration_minutes' => 20],
+            $fadeHaircut->id => ['price' => 3500, 'duration_minutes' => 45],
         ]);
 
         $barber2->services()->attach([
-            $haircut->id,
-            $buzzCut->id,
-            $fullBeardService->id,
+            $haircut->id => ['price' => 2000, 'duration_minutes' => 25],
+            $buzzCut->id => ['price' => 1800, 'duration_minutes' => 15],
+            $fullBeardService->id => ['price' => 3200, 'duration_minutes' => 40],
         ]);
 
         $barber3->services()->attach([
-            $haircut->id,
-            $beardTrim->id,
-            $buzzCut->id,
-            $fadeHaircut->id,
-            $fullBeardService->id,
+            $haircut->id => ['price' => 2800, 'duration_minutes' => 35],
+            $beardTrim->id => ['price' => 1800, 'duration_minutes' => 25],
+            $buzzCut->id => ['price' => 1600, 'duration_minutes' => 12],
+            $fadeHaircut->id => ['price' => 4000, 'duration_minutes' => 50],
+            $fullBeardService->id => ['price' => 3500, 'duration_minutes' => 45],
         ]);
 
         // Create working hours for all barbers (Monday to Friday, 9 AM to 6 PM)
