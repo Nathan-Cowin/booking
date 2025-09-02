@@ -92,4 +92,39 @@ class ClientAuthController extends Controller
             'client' => $client,
         ]);
     }
+
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+        $client = $user->client;
+
+        if (! $client) {
+            return response()->json([
+                'message' => 'Client profile not found',
+            ], 422);
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'phone' => ['nullable', 'string', 'max:20'],
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        $client->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ]);
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $user->fresh(),
+            'client' => $client->fresh(),
+        ]);
+    }
 }
