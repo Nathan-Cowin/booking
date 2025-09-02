@@ -21,8 +21,7 @@ class WorkingHours extends Model
     ];
 
     protected $casts = [
-        'start_time' => 'datetime:H:i',
-        'end_time' => 'datetime:H:i',
+        'day_of_week' => 'integer',
         'is_available' => 'boolean',
     ];
 

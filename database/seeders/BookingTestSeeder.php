@@ -21,7 +21,7 @@ class BookingTestSeeder extends Seeder
         // Create users for barbers
         $barberUser1 = User::create([
             'name' => 'Matthew',
-            'email' => 'todo@example.com', //todo:
+            'email' => 'matthew@example.com',
             'password' => Hash::make('BSideLabel1!'),
             'email_verified_at' => now(),
         ]);

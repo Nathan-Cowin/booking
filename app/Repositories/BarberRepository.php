@@ -13,7 +13,7 @@ class BarberRepository implements BarberRepositoryInterface
     public function workingHours(Barber $barber, Carbon $date): ?WorkingHours
     {
         return $barber->workingHours()
-            ->where('day_of_week', $date->format('l'))
+            ->where('day_of_week', $date->dayOfWeek)
             ->where('is_available', true)
             ->first();
     }

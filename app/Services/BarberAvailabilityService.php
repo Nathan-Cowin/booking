@@ -51,8 +51,8 @@ class BarberAvailabilityService
     ): array {
         $slots = [];
 
-        $startTime = $date->copy()->setTimeFromTimeString($workingHours->start_time->format('H:i'));
-        $endTime = $date->copy()->setTimeFromTimeString($workingHours->end_time->format('H:i'));
+        $startTime = $date->copy()->setTimeFromTimeString($workingHours->start_time);
+        $endTime = $date->copy()->setTimeFromTimeString($workingHours->end_time);
         $current = $this->adjustStartTimeForToday($date, $startTime);
 
         while ($current->copy()->addMinutes($serviceDuration)->lte($endTime)) {

@@ -21,7 +21,7 @@ class BookingController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $client = auth()->user()->client;
-        
+
         if (! $client) {
             return BookingResource::collection([]);
         }
@@ -121,7 +121,7 @@ class BookingController extends Controller
     private function isSlotAvailable(Barber $barber, Carbon $startTime, Carbon $endTime): bool
     {
         $date = $startTime->copy()->startOfDay();
-        $dayOfWeek = $startTime->format('l');
+        $dayOfWeek = $startTime->format('w');
 
         $workingHours = $barber->workingHours()
             ->where('day_of_week', $dayOfWeek)
@@ -132,8 +132,8 @@ class BookingController extends Controller
             return false;
         }
 
-        $workingStart = $date->copy()->setTimeFromTimeString($workingHours->start_time->format('H:i'));
-        $workingEnd = $date->copy()->setTimeFromTimeString($workingHours->end_time->format('H:i'));
+        $workingStart = $date->copy()->setTimeFromTimeString($workingHours->start_time);
+        $workingEnd = $date->copy()->setTimeFromTimeString($workingHours->end_time);
 
         if ($startTime->lt($workingStart) || $endTime->gt($workingEnd)) {
             return false;
@@ -142,6 +142,8 @@ class BookingController extends Controller
         if ($startTime->isPast()) {
             return false;
         }
+
+        dd('here');
 
         $conflictingBookings = $barber->bookings()
             ->whereDate('start_time', $date)
